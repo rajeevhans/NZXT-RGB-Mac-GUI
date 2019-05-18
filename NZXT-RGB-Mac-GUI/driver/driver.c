@@ -70,10 +70,18 @@ unsigned int off2_bin_len = 65;
 // handle is initialized once in driver_init() and used until driver_teardown() is called
 static hid_device *handle = NULL;
 
+void init_handle(void);
+void send_cmd(unsigned const char *cmd, size_t len);
+
 void driver_init() {
     // Initialize the hidapi library
     hid_init();
-    
+    init_handle();
+}
+
+// separate function for initializing device handle in case it has to be
+// re-initialized (in case the computer goes to sleep and then awakens, etc.)
+void init_handle() {
     // Open the device using the VID, PID,
     // and optionally the Serial number.
     handle = hid_open(0x1e71, 0x1714, NULL);
@@ -89,7 +97,12 @@ void driver_teardown() {
 }
 
 void send_cmd(unsigned const char *cmd, size_t len) {
-    hid_write(handle, cmd, len);
+    if (hid_write(handle, cmd, len) == -1) {
+        // handle may no longer be valid
+        // (this will happen if the computer has gone to sleep and was awakened)
+        init_handle();
+        hid_write(handle, cmd, len);
+    }
 }
 
 void set_lights_on(bool on) {
