@@ -34,6 +34,8 @@
 
 @implementation AppDelegate
 
+static dispatch_once_t onceToken;
+
 - (IBAction)turnRGBOn:(id)sender {
     NSLog(@"rgb on");
     set_lights_on(true);
@@ -62,7 +64,9 @@
     
     // must be called ONCE on app launch;
     // if called multiple times, getting device handles will fail
-    driver_init();
+    dispatch_once(&onceToken, ^{
+        driver_init();
+    });
     
     [self setupBarMenu];
 }
@@ -76,6 +80,11 @@
 - (void)application:(NSApplication *)application openURLs:(NSArray<NSURL *> *)urls {
     for (NSURL* url in urls) {
         if ([[url scheme]isEqualToString:@"nzxt-rgb-mac"]) {
+            // see above note
+            dispatch_once(&onceToken, ^{
+                driver_init();
+            });
+            
             BOOL on = [[url resourceSpecifier]isEqualToString:@"on"];
             set_lights_on(on);
         }
