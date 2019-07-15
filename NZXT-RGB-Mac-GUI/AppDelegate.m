@@ -73,5 +73,13 @@
     driver_teardown();
 }
 
+- (void)application:(NSApplication *)application openURLs:(NSArray<NSURL *> *)urls {
+    for (NSURL* url in urls) {
+        if ([[url scheme]isEqualToString:@"nzxt-rgb-mac"]) {
+            BOOL on = [[url resourceSpecifier]isEqualToString:@"on"];
+            set_lights_on(on);
+        }
+    }
+}
 
 @end
