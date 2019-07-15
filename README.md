@@ -41,6 +41,13 @@ https://github.com/signal11/hidapi
 - Add to app code in AppDelegate.m, driver.h, driver.c
 - Submit a pull request so I can merge your code here
 
+### Remote control
+
+Open these URLs to send commands to the app remotely (useful in shell scripts)
+
+nzxt-rgb-mac:on
+nzxt-rgb-mac:off
+
 ### License
 
 GNU GPL v3; see License.txt  
