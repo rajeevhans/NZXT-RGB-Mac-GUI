@@ -84,7 +84,7 @@ void driver_init() {
 void init_handle() {
     // Open the device using the VID, PID,
     // and optionally the Serial number.
-    handle = hid_open(0x1e71, 0x1714, NULL);
+    handle = hid_open(0x1e71, 0x2006, NULL);
     if (!handle) {
         fprintf(stderr, "could not get device handle; ensure device is connected and has correct ID\n");
         return;
